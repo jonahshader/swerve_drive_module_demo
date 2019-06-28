@@ -18,7 +18,6 @@ class App : PApplet() {
     }
 
     override fun setup() {
-
     }
 
     override fun draw() {
@@ -27,7 +26,8 @@ class App : PApplet() {
         translate(0f, -height.toFloat())
         val x = ((mouseX.toDouble() / width) - 0.5) * 2.0
         val y = -((mouseY.toDouble() / height) - 0.5) * 2.0
-        swerveController.run(x, y)
+        val magnitude = kotlin.math.sqrt(x * x + y * y)
+        swerveController.run(x, y, magnitude)
         swerveController.draw(this)
 
         strokeWeight(1f)

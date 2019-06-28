@@ -2,6 +2,7 @@ package jonahshader
 
 import processing.core.PApplet
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -11,6 +12,9 @@ class SwerveModule(private val x: Double, private val y: Double) {
     private var power = 0.0
     private var targetAngle = 0.0
     private var realAngle = 0.0
+    private var strafeMagnitude = 0.0
+    private var xPivot = 0.0
+    private var yPivot = 0.0
 
 
     fun run() {
@@ -32,12 +36,11 @@ class SwerveModule(private val x: Double, private val y: Double) {
         } else {
             graphics.stroke(255f, 0f, 0f)
         }
-//        val x: Float = (cos(realAngle) * graphics.width  * abs(power)).toFloat() / 2f + graphics.width / 2f
-//        val y: Float = (sin(realAngle) * graphics.height  * abs(power)).toFloat() / 2f + graphics.height / 2f
-//        val x: Float = (cos(realAngle) * graphics.width / 2f + graphics.width / 2f).toFloat()
-//        val y: Float = (sin(realAngle) * graphics.height / 2f + graphics.height / 2f).toFloat()
-        val xEnd: Double = (cos(realAngle) * graphics.width / 2f) + x
-        val yEnd: Double = (sin(realAngle) * graphics.width / 2f) + y
+
+        var xEnd = (cos(realAngle) * graphics.width / 2f) * abs(power)
+        var yEnd = (sin(realAngle) * graphics.width / 2f) * abs(power)
+        xEnd += x
+        yEnd += y
         graphics.line(x.toFloat(), y.toFloat(), xEnd.toFloat(), yEnd.toFloat())
     }
 
@@ -49,8 +52,13 @@ class SwerveModule(private val x: Double, private val y: Double) {
         targetAngle = targetRotation * PI * 2
     }
 
-    fun setRobotRotations() {
+    fun setRobotRotations(strafeMagnitude: Double) {
+        this.strafeMagnitude = strafeMagnitude
+    }
 
+    fun setPivotPoint(xPivot: Double, yPivot: Double) {
+        this.xPivot = xPivot
+        this.yPivot = yPivot
     }
 
     fun getRealRotations() : Double = realAngle / (PI * 2)

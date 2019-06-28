@@ -15,9 +15,8 @@ class SwerveController(width: Int, height: Int) {
     private var inDeadband = false
 
     // x y, probably from mouse. must be scaled so that min is -1 and max is 1
-    fun run(x: Double, y: Double) {
-        val mouseDistance = sqrt(x * x + y * y)
-        if (mouseDistance > deadband) {
+    fun run(x: Double, y: Double, magnitude: Double) {
+        if (magnitude > deadband) {
             mouseAngle = atan2(y, x)
             inDeadband = false
         } else {
@@ -26,7 +25,6 @@ class SwerveController(width: Int, height: Int) {
 
         val mouseRotations = mouseAngle / (PI * 2)
 
-//        var deltaRotations = mouseRotations - targetRotations
         var targetRotationsWrapped = targetRotations
 
         while (targetRotationsWrapped > 0.5)
@@ -55,8 +53,7 @@ class SwerveController(width: Int, height: Int) {
             flipped = true
         }
 
-
-        module.setDrivePower(if (flipped) -mouseDistance else mouseDistance)
+        module.setDrivePower(if (inDeadband) 0.0 else if (flipped) -magnitude else magnitude)
         module.setRobotStrafe(targetRotations)
         module.run()
     }

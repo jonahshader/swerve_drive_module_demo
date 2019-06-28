@@ -45,11 +45,13 @@ class SwerveModule(private val x: Double, private val y: Double) {
         this.power = power
     }
 
-    fun setTargetRotations(targetRotation: Double) {
+    fun setRobotStrafe(targetRotation: Double) {
         targetAngle = targetRotation * PI * 2
     }
 
-//    fun setRobotRotations()
+    fun setRobotRotations() {
+
+    }
 
     fun getRealRotations() : Double = realAngle / (PI * 2)
 }

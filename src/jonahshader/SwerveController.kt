@@ -57,7 +57,7 @@ class SwerveController(width: Int, height: Int) {
 
 
         module.setDrivePower(if (flipped) -mouseDistance else mouseDistance)
-        module.setTargetRotations(targetRotations)
+        module.setRobotStrafe(targetRotations)
         module.run()
     }
 

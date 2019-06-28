@@ -8,7 +8,10 @@ fun main() {
 
 class App : PApplet() {
 
-    private val swerveController = SwerveController()
+    private val screenWidth = 640
+    private val screenHeight = 640
+
+    private val swerveController = SwerveController(screenWidth, screenHeight)
 
     override fun settings() {
         size(640, 640)
@@ -26,6 +29,10 @@ class App : PApplet() {
         val y = -((mouseY.toDouble() / height) - 0.5) * 2.0
         swerveController.run(x, y)
         swerveController.draw(this)
+
+        strokeWeight(1f)
+        stroke(127f, 127f, 127f)
+        line(width / 2f, height / 2f, mouseX.toFloat(), height - mouseY.toFloat())
     }
 
 }

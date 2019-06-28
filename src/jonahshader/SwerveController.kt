@@ -5,16 +5,24 @@ import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.sqrt
 
-class SwerveController {
-    private val module = SwerveModule()
+class SwerveController(width: Int, height: Int) {
+    private val module = SwerveModule(width / 4.0, height/2.0)
+    private val deadband = 0.2
 
     private var targetRotations = 0.0
     private var flipped = false
+    private var mouseAngle = 0.0
+    private var inDeadband = false
 
     // x y, probably from mouse. must be scaled so that min is -1 and max is 1
     fun run(x: Double, y: Double) {
         val mouseDistance = sqrt(x * x + y * y)
-        val mouseAngle = atan2(y, x)
+        if (mouseDistance > deadband) {
+            mouseAngle = atan2(y, x)
+            inDeadband = false
+        } else {
+            inDeadband = true
+        }
 
         val mouseRotations = mouseAngle / (PI * 2)
 
@@ -48,7 +56,6 @@ class SwerveController {
         }
 
 
-
         module.setDrivePower(if (flipped) -mouseDistance else mouseDistance)
         module.setTargetRotations(targetRotations)
         module.run()
@@ -56,5 +63,14 @@ class SwerveController {
 
     fun draw(graphics: PApplet) {
         module.draw(graphics)
+        if (inDeadband) {
+            graphics.stroke(255f, 255f, 0f, 45f)
+            graphics.fill(255f, 255f, 0f, 45f)
+        } else {
+            graphics.stroke(255f, 255f, 0f, 15f)
+            graphics.fill(255f, 255f, 0f, 15f)
+        }
+
+        graphics.circle(graphics.width / 2f, graphics.height / 2f, graphics.width * deadband.toFloat())
     }
 }

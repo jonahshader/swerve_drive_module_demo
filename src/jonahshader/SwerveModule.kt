@@ -5,7 +5,7 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-class SwerveModule {
+class SwerveModule(private val x: Double, private val y: Double) {
     private val maxSpeed = 0.05
 
     private var power = 0.0
@@ -32,9 +32,13 @@ class SwerveModule {
         } else {
             graphics.stroke(255f, 0f, 0f)
         }
-        val x: Float = (cos(realAngle) * graphics.width / 2f).toFloat() + graphics.width / 2f
-        val y: Float = (sin(realAngle) * graphics.height / 2f).toFloat() + graphics.height / 2f
-        graphics.line(graphics.width / 2f, graphics.height / 2f, x, y)
+//        val x: Float = (cos(realAngle) * graphics.width  * abs(power)).toFloat() / 2f + graphics.width / 2f
+//        val y: Float = (sin(realAngle) * graphics.height  * abs(power)).toFloat() / 2f + graphics.height / 2f
+//        val x: Float = (cos(realAngle) * graphics.width / 2f + graphics.width / 2f).toFloat()
+//        val y: Float = (sin(realAngle) * graphics.height / 2f + graphics.height / 2f).toFloat()
+        val xEnd: Double = (cos(realAngle) * graphics.width / 2f) + x
+        val yEnd: Double = (sin(realAngle) * graphics.width / 2f) + y
+        graphics.line(x.toFloat(), y.toFloat(), xEnd.toFloat(), yEnd.toFloat())
     }
 
     fun setDrivePower(power: Double) {
@@ -44,6 +48,8 @@ class SwerveModule {
     fun setTargetRotations(targetRotation: Double) {
         targetAngle = targetRotation * PI * 2
     }
+
+//    fun setRobotRotations()
 
     fun getRealRotations() : Double = realAngle / (PI * 2)
 }

@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="processing">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../Java Libraries/Processing 3.5.3/core.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../Java Libraries/Processing 3.5.3/gluegen-rt.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../Java Libraries/Processing 3.5.3/jogl-all.jar!/" />
+      <root url="jar://$USER_HOME$/Documents/Java Libraries/Processing/core.jar!/" />
+      <root url="jar://$USER_HOME$/Documents/Java Libraries/Processing/gluegen-rt.jar!/" />
+      <root url="jar://$USER_HOME$/Documents/Java Libraries/Processing/jogl-all.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

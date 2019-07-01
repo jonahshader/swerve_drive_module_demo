@@ -1,6 +1,16 @@
 package jonahshader
 
 import processing.core.PApplet
+/*
+some ideas to implement:
+
+-scale module magnitudes down if they are not near their target angle
+val scaleDown = 0.25 - maxDelta
+maybe square it??
+
+this will reduce the error from driving while the module is not at the target yet. should make the driving feel more predictable, and would be crutial in autonomous.
+
+ */
 
 fun main() {
     PApplet.main(App::class.java)

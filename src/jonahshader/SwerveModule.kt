@@ -4,16 +4,15 @@ import jonahshader.SwerveController.Companion.deadband
 import processing.core.PApplet
 import kotlin.math.*
 
-class SwerveModule(private val x: Double, private val y: Double) {
+class SwerveModule(private val x: Double, private val y: Double, private val pivotPoint: PivotPoint) {
     private val maxSpeed = 0.05 * PI / 3.0             // max radians this module can rotate per frame
 
     private var magnitude = 0.0             // speed and polarity of module
-    private var targetDirection = 0.0       // target direction in range -1 to 1. this is the end goal direction this module should be driving
+    private var strafeMagnitude = 0.0       // just the magnitude of the strafing
+    private var targetStrafeDirection = 0.0       // target direction in range -1 to 1. this is the end goal direction this module should be driving
     private var targetAngle = 0.0           // this is the actual direction the module should be facing
     private var realAngle = 0.0             // current raw angle the module is at at any given time
     private var robotRotationVelocity = 0.0    // from -1 to 1, target robot rotation speed. (how fast this module will rotate around its pivot point)
-    private var xPivot = 0.0                // x coordinate for pivot point
-    private var yPivot = 0.0                // y coordinate for pivot point
     private var targetRotations = 0.0
     private var flipped = false
 
@@ -31,7 +30,25 @@ class SwerveModule(private val x: Double, private val y: Double) {
     }
 
     private fun runAngleCalculation() {
-        val mouseRotations = targetDirection / (PI * 2)
+        // calculate target strafe direction in rotations
+//        val targetStrafeDirectionRotations = targetStrafeDirection / (PI * 2)
+        // calculate components
+        val targetStrafeDirectionXComp = cos(targetStrafeDirection) * strafeMagnitude
+        val targetStrafeDirectionYComp = sin(targetStrafeDirection) * strafeMagnitude
+
+        // calculate target robot rotation direction in rads (which is 90 degrees offset from the angle between the
+        // module and the pivot point
+        val targetRotationDirection = atan2(y - pivotPoint.y, x - pivotPoint.x) - (PI * .5)
+        // calculate components
+        val targetRotationDirectionXComp = cos(targetRotationDirection) * robotRotationVelocity
+        val targetRotationDirectionYComp = sin(targetRotationDirection) * robotRotationVelocity
+
+        val compositeX = targetStrafeDirectionXComp + targetRotationDirectionXComp
+        val compositeY = targetStrafeDirectionYComp + targetRotationDirectionYComp
+        val compositeTargetDirectionRotations = atan2(compositeY, compositeX) / (PI * 2)
+        val compositeMagnitude = sqrt(compositeX * compositeX + compositeY * compositeY)
+        magnitude = compositeMagnitude
+
 
         var targetRotationsWrapped = targetRotations
 
@@ -40,7 +57,7 @@ class SwerveModule(private val x: Double, private val y: Double) {
         while (targetRotationsWrapped < -0.5)
             targetRotationsWrapped++
 
-        var smallestDelta = mouseRotations - targetRotationsWrapped
+        var smallestDelta = compositeTargetDirectionRotations - targetRotationsWrapped
         smallestDelta += if (smallestDelta > 0.5) -1 else if (smallestDelta < -0.5) 1 else 0
 
         targetRotations += smallestDelta
@@ -62,6 +79,8 @@ class SwerveModule(private val x: Double, private val y: Double) {
         }
 
         targetAngle = targetRotations * PI * 2
+
+
     }
 
     fun draw(graphics: PApplet) {
@@ -82,14 +101,14 @@ class SwerveModule(private val x: Double, private val y: Double) {
     // magnitude must be within the range [0, 1]
     // robotRotationVelocity must be within the range [0, 1]
     // robotStrafeRotations can be any number
-    fun setDriveParams(robotStrafeRotations: Double, magnitude: Double, robotRotationVelocity: Double) {
+    fun setDriveParams(robotStrafeRotations: Double, strafeMagnitude: Double, robotRotationVelocity: Double) {
         // update robotStrafeRotations and magnitude only if the magnitude is above the deadband threshold
-        if (magnitude > deadband) {
-            this.magnitude = magnitude
-            targetDirection = robotStrafeRotations * PI * 2
+        if (strafeMagnitude > deadband) {
+            this.strafeMagnitude = strafeMagnitude
+            targetStrafeDirection = robotStrafeRotations * PI * 2
         } else {
             // if magnitude is within the deadband, set it to 0
-            this.magnitude = 0.0
+            this.strafeMagnitude = 0.0
         }
         this.robotRotationVelocity = if (abs(robotRotationVelocity) > deadband) robotRotationVelocity else 0.0
     }
@@ -98,11 +117,6 @@ class SwerveModule(private val x: Double, private val y: Double) {
     // SwerveController then multiplies by the inverse to scale down all module magnitudes
     fun multiplyMagnitude(otherMagnitude: Double) {
         magnitude *= otherMagnitude
-    }
-
-    fun setPivotPoint(xPivot: Double, yPivot: Double) {
-        this.xPivot = xPivot
-        this.yPivot = yPivot
     }
 
     private fun getRealRotations() : Double = realAngle / (PI * 2)

@@ -21,7 +21,11 @@ class App : PApplet() {
     private val screenWidth = 640
     private val screenHeight = 640
 
+    private val rotationSpeed = 0.01
+
     private val swerveController = SwerveController(screenWidth, screenHeight)
+
+    private var rotationVelocity = 0.0
 
     override fun settings() {
         size(640, 640)
@@ -37,7 +41,16 @@ class App : PApplet() {
         val x = ((mouseX.toDouble() / width) - 0.5) * 2.0
         val y = -((mouseY.toDouble() / height) - 0.5) * 2.0
         val magnitude = kotlin.math.sqrt(x * x + y * y)
-        swerveController.run(x, y, magnitude)
+
+        if (keyPressed) {
+            if (key.toLowerCase() == 'a') {
+                rotationVelocity -= rotationSpeed
+            } else if (key.toLowerCase() == 'd') {
+                rotationVelocity += rotationSpeed
+            }
+        }
+
+        swerveController.run(x, y, magnitude, rotationVelocity)
         swerveController.draw(this)
 
         strokeWeight(1f)

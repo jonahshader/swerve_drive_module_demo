@@ -24,12 +24,22 @@ class SwerveController(width: Int, height: Int) {
     private var inDeadband = false
 
     // x y, probably from mouse. must be scaled so that min is -1 and max is 1
-    fun run(x: Double, y: Double, magnitude: Double) {
-        inDeadband = magnitude < 0.2
+    fun run(x: Double, y: Double, strafeMagnitude: Double, rotationVelocity: Double) {
+        inDeadband = strafeMagnitude < 0.2
         mouseAngle = atan2(y, x)
+        var largestMagnitude = 1.0
         for (i in modules.indices) {
-            modules[i].setDriveParams(mouseAngle / (PI * 2), magnitude, 0.5)
+            modules[i].setDriveParams(mouseAngle / (PI * 2), strafeMagnitude, rotationVelocity)
             modules[i].run()
+            if (modules[i].getMagnitude() > largestMagnitude)
+                largestMagnitude = modules[i].getMagnitude()
+        }
+
+        if (largestMagnitude > 1.0) {
+            val invLargestMagnitude = 1.0 / largestMagnitude
+            for (i in modules.indices) {
+                modules[i].multiplyMagnitude(invLargestMagnitude)
+            }
         }
     }
 

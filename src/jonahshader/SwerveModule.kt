@@ -5,6 +5,7 @@ import processing.core.PApplet
 import kotlin.math.*
 
 class SwerveModule(private val x: Double, private val y: Double, private val pivotPoint: PivotPoint) {
+    private val lineLengthScale = 0.5
     private val maxSpeed = 0.05 * PI / 3.0             // max radians this module can rotate per frame
 
     private var magnitude = 0.0             // speed and polarity of module
@@ -30,8 +31,6 @@ class SwerveModule(private val x: Double, private val y: Double, private val piv
     }
 
     private fun runAngleCalculation() {
-        // calculate target strafe direction in rotations
-//        val targetStrafeDirectionRotations = targetStrafeDirection / (PI * 2)
         // calculate components
         val targetStrafeDirectionXComp = cos(targetStrafeDirection) * strafeMagnitude
         val targetStrafeDirectionYComp = sin(targetStrafeDirection) * strafeMagnitude
@@ -80,7 +79,6 @@ class SwerveModule(private val x: Double, private val y: Double, private val piv
 
         targetAngle = targetRotations * PI * 2
 
-
     }
 
     fun draw(graphics: PApplet) {
@@ -91,8 +89,8 @@ class SwerveModule(private val x: Double, private val y: Double, private val piv
             graphics.stroke(0f, 255f, 0f)
         }
 
-        var xEnd = (cos(realAngle) * graphics.width / 2f) * abs(magnitude)
-        var yEnd = (sin(realAngle) * graphics.width / 2f) * abs(magnitude)
+        var xEnd = (cos(realAngle) * graphics.width / 2f) * abs(magnitude) * lineLengthScale
+        var yEnd = (sin(realAngle) * graphics.width / 2f) * abs(magnitude) * lineLengthScale
         xEnd += (x + 0.5) * graphics.width
         yEnd += (y + 0.5) * graphics.height
         graphics.line(((x + 0.5) * graphics.width).toFloat(), ((y + 0.5) * graphics.height).toFloat(), xEnd.toFloat(), yEnd.toFloat())
@@ -120,4 +118,5 @@ class SwerveModule(private val x: Double, private val y: Double, private val piv
     }
 
     private fun getRealRotations() : Double = realAngle / (PI * 2)
+    fun getMagnitude(): Double = magnitude
 }

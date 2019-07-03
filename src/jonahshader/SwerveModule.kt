@@ -78,7 +78,7 @@ class SwerveModule(private val x: Double, private val y: Double, private val piv
         }
 
         targetAngle = targetRotations * PI * 2
-
+        println(targetAngle)
     }
 
     fun draw(graphics: PApplet) {

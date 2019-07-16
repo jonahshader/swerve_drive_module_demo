@@ -22,10 +22,13 @@ class App : PApplet() {
     private val screenHeight = 640
 
     private val rotationSpeed = 0.01
+    private val pivotChangeSpeed = 0.01
 
     private val swerveController = SwerveController(screenWidth, screenHeight)
 
     private var rotationVelocity = 0.0
+    private var pivotX = 0.0
+    private var pivotY = 0.0
 
     override fun settings() {
         size(640, 640)
@@ -47,13 +50,21 @@ class App : PApplet() {
                 rotationVelocity -= rotationSpeed
             } else if (key.toLowerCase() == 'd') {
                 rotationVelocity += rotationSpeed
+            } else if (key == '4') {
+                pivotX -= pivotChangeSpeed
+            } else if (key == '6') {
+                pivotX += pivotChangeSpeed
+            } else if (key == '8') {
+                pivotY += pivotChangeSpeed
+            } else if (key == '5') {
+                pivotY -= pivotChangeSpeed
             }
 
             if (rotationVelocity > 1.0) rotationVelocity = 1.0
             else if (rotationVelocity < -1.0) rotationVelocity = -1.0
         }
 
-        swerveController.run(x, y, magnitude, rotationVelocity)
+        swerveController.run(x, y, magnitude, rotationVelocity, pivotX, pivotY)
         swerveController.draw(this)
 
         strokeWeight(1f)

@@ -59,7 +59,7 @@ class SwerveModule(private val x: Double, private val y: Double, private val piv
         var smallestDelta = compositeTargetDirectionRotations - targetRotationsWrapped
         smallestDelta += if (smallestDelta > 0.5) -1 else if (smallestDelta < -0.5) 1 else 0
 
-        targetRotations += smallestDelta
+        targetRotations += smallestDelta    // change target angle
 
         while (targetRotations - getRealRotations() > 1) {
             targetRotations--
@@ -102,13 +102,14 @@ class SwerveModule(private val x: Double, private val y: Double, private val piv
         // update robotStrafeRotations and magnitude only if the magnitude is above the deadband threshold
         if (strafeMagnitude > deadband) {
             this.strafeMagnitude = strafeMagnitude
-            targetStrafeDirection = robotStrafeRotations * PI * 2
+
         } else {
             // if magnitude is within the deadband, set it to 0
             this.strafeMagnitude = 0.0
         }
 //        this.robotRotationVelocity = if (abs(robotRotationVelocity) > deadband) robotRotationVelocity else 0.0
         this.robotRotationVelocity = robotRotationVelocity
+        targetStrafeDirection = robotStrafeRotations * PI * 2
     }
 
     // this is used when SwerveController finds the largest magnitude to be over 1.0.

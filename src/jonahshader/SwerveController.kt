@@ -24,7 +24,7 @@ class SwerveController(width: Int, height: Int) {
     private var inDeadband = false
 
     // x y, probably from mouse. must be scaled so that min is -1 and max is 1
-    fun run(x: Double, y: Double, strafeMagnitude: Double, rotationVelocity: Double) {
+    fun run(x: Double, y: Double, strafeMagnitude: Double, rotationVelocity: Double, pivotX: Double, pivotY: Double) {
         inDeadband = strafeMagnitude < 0.2
         mouseAngle = atan2(y, x)
         var largestMagnitude = 1.0
@@ -41,6 +41,9 @@ class SwerveController(width: Int, height: Int) {
                 modules[i].multiplyMagnitude(invLargestMagnitude)
             }
         }
+
+        pivotPoint.x = pivotX
+        pivotPoint.y = pivotY
     }
 
     fun draw(graphics: PApplet) {

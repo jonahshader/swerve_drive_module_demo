@@ -48,6 +48,9 @@ class App : PApplet() {
             } else if (key.toLowerCase() == 'd') {
                 rotationVelocity += rotationSpeed
             }
+
+            if (rotationVelocity > 1.0) rotationVelocity = 1.0
+            else if (rotationVelocity < -1.0) rotationVelocity = -1.0
         }
 
         swerveController.run(x, y, magnitude, rotationVelocity)

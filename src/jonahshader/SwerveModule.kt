@@ -78,7 +78,6 @@ class SwerveModule(private val x: Double, private val y: Double, private val piv
         }
 
         targetAngle = targetRotations * PI * 2
-        println(targetAngle)
     }
 
     fun draw(graphics: PApplet) {
@@ -108,7 +107,8 @@ class SwerveModule(private val x: Double, private val y: Double, private val piv
             // if magnitude is within the deadband, set it to 0
             this.strafeMagnitude = 0.0
         }
-        this.robotRotationVelocity = if (abs(robotRotationVelocity) > deadband) robotRotationVelocity else 0.0
+//        this.robotRotationVelocity = if (abs(robotRotationVelocity) > deadband) robotRotationVelocity else 0.0
+        this.robotRotationVelocity = robotRotationVelocity
     }
 
     // this is used when SwerveController finds the largest magnitude to be over 1.0.
